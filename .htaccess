@@ -2,8 +2,8 @@ Options +FollowSymLinks
 IndexIgnore */*
 RewriteEngine on
 
-#RewriteCond %{HTTP_HOST} ^domain.com
-#RewriteRule (.*) http://www.domain.com/$1 [R=301,L]
+#RewriteCond %{HTTP_HOST} ^olimp2014.net
+#RewriteRule (.*) http://www.olimp2014.net/$1 [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

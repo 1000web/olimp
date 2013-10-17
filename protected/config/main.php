@@ -10,14 +10,17 @@ Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 
-switch (substr($_SERVER['SERVER_NAME'], 0, 6)) {
+switch ($_SERVER['SERVER_NAME']) {
     // если имя сервера начинается на local.
-    case "local.":
-        $config = 'development.php';
+    case "olimp2014.net":
+    case "www.olimp2014.net":
+        $config = 'db/olimp2014.php';
         break;
     default:
-        $config = 'production.php';
+        $config = 'db/development.php';
 }
+//Yii::app()->setHomeUrl('http://local.olimp2014.net/');
+
 // склеиваем массив - основной и настройки БД
 return CMap::mergeArray(
     require($config),
@@ -27,8 +30,10 @@ return CMap::mergeArray(
         'language' => 'ru',
 
         'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-        'name' => 'CRM.1000web',
-        //'theme'=>'bootstrap', // requires you to copy the theme under your themes directory
+        'defaultController' => 'site',
+
+        'name' => 'Olimp',
+        'theme' => 'olimp2014',
 
         // preloading 'log' component
         'preload' => array(
@@ -47,12 +52,13 @@ return CMap::mergeArray(
             'application.modules.rights.components.*',
         ),
         'modules' => array(
+            'admin',
             'rights',
             'user' => array(
                 # encrypting method (php hash function)
                 'hash' => 'md5',
                 # send activation email
-                'sendActivationMail' => true,
+                'sendActivationMail' => false,
                 # allow access for non-activated users
                 'loginNotActiv' => false,
                 # activate user on registration (only sendActivationMail = false)
@@ -104,13 +110,28 @@ return CMap::mergeArray(
                 'caseSensitive' => false,
                 'urlSuffix' => '',
                 'rules' => array(
+                    'tag'           => 'site/tag',
+                    'tag/<url>'     => 'site/tag',
+                    'post'          => 'site/post',
+                    'post/<url>'    => 'site/post',
+                    'place'         => 'site/place',
+                    'place/<url>'   => 'site/place',
+                    'sport'         => 'site/sport',
+                    'sport/<url>'   => 'site/sport',
+                    'category'      => 'site/category',
+                    'category/<url>'=> 'site/category',
+
+                    'date' => 'site/date',
+                    'date/<y:\d+>' => 'site/date',
+                    'date/<y:\d+>/<m:\d+>' => 'site/date',
+                    'date/<y:\d+>/<m:\d+>/<d:\d+>' => 'site/date',
+
                     '<controller:\w+>/<id:\d+>' => '<controller>/view',
                     '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                     '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 ),
             ),
-            'sms' => array
-            (
+            'sms' => array(
                 'class' => 'application.extensions.yii-sms.Sms',
                 'login' => '9185569410', // Логин на сайте sms.ru
                 'password' => 'SMS1pass', // Пароль
@@ -120,7 +141,6 @@ return CMap::mergeArray(
                 'responsiveCss' => true,
             ),
             'errorHandler' => array(
-                // use 'site/error' action to display errors
                 'errorAction' => 'site/error',
             ),
             'log' => array(
@@ -145,6 +165,8 @@ return CMap::mergeArray(
         'params' => array(
             // this is used in contact page
             'adminEmail' => 'admin@1000web.ru',
+            'cdnPrefix' => '',
+            //'cdnPrefix' => 'http://cdn.olimp2014.net',
         ),
     )
 );

@@ -3,22 +3,28 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class Controller extends RController
+class FrontendController extends RController
 {
-    public $layout = '//layouts/column1';
+    public $layout = '//layouts/site';
 
     public $attributes = array();
     public $breadcrumbs = array();
-    public $buttons = array();
-    public $columns = array();
-    public $labels = array();
+    public $tags = array();
+
+    public $meta_title = 'Заголовок страницы';
+    public $meta_keywords = '';
+    public $meta_description = '';
+
+    public $meta_canonical = '';
+    public $meta_prev = '';
+    public $meta_next = '';
+
     public $menu = array();
+    public $widgets = array();
 
     public $header_image = '';
     public $h1 = 'Header H1';
     public $description = '';
-
-    public $favorite_available = false;
 
     protected $_model = NULL;
     protected $_filter = NULL;
@@ -166,62 +172,6 @@ class Controller extends RController
         }
     }
 
-    public function addButton($controller, $action)
-    {
-        if (!$controller) $controller = $this->id;
-        if ($action == 'copy') $check = 'create';
-        else $check = $action;
-        if (MyHelper::checkAccess($controller, $check)) {
-            $this->buttons[$action] = array(
-                'url' => 'Yii::app()->createUrl("' . $controller . '/' . $action . '", array("id"=>$data->id))',
-            );
-            switch ($action) {
-                case 'create':
-                    $this->buttons[$action]['url'] = 'Yii::app()->createUrl("' . $controller . '/' . $action . '", array("parent_id"=>$data->id))';
-                    $this->buttons[$action]['icon'] = 'icon-plus';
-                    break;
-                case 'copy':
-                    $this->buttons[$action]['url'] = 'Yii::app()->createUrl("' . $controller . '/create", array("copy"=>$data->id))';
-                    $this->buttons[$action]['icon'] = 'icon-plus';
-                    break;
-            }
-        }
-    }
-
-    public function addButtons($controller, $actions, $preserve = FALSE)
-    {
-        if ($preserve === FALSE) $this->buttons = array();
-        foreach ($actions as $action) {
-            $this->addButton($controller, $action);
-        }
-    }
-
-    public function addColumn($name)
-    {
-        $item = array('name' => $name, 'header' => $this->getLabel($name));
-        $value = $this->getColumnValue($name);
-        if ($value !== NULL) {
-            $item['value'] = $value;
-            $item['type'] = 'raw';
-        }
-        $this->columns[$name] = $item;
-    }
-
-    public function addColumns($list, $preserve = FALSE)
-    {
-        if ($preserve === FALSE) $this->columns = array();
-        foreach ($list as $item) {
-            // for example: controller = organization, item = organization_id
-            if ($item != $this->id . '_id') $this->addColumn($item);
-        }
-    }
-
-    public function columnLabels($controller = NULL)
-    {
-        if ($controller === NULL) $controller = $this->getId();
-        $this->labels = MyHelper::labels($controller);
-    }
-
     public function getLabel($item)
     {
         // если массив с метками пустой. то загружаем массив для текущего контроллера
@@ -236,89 +186,12 @@ class Controller extends RController
         return MyHelper::getValue($name, '$data');
     }
 
-    public function buildMenuOperations($id = NULL)
-    {
-        $items = array(
-            'create' => array(
-                'label' => Yii::t('lang', 'Создать'),
-                'icon' => MyHelper::action_icon('create'),
-                'url' => array('create')),
-            'index' => array(
-                'label' => Yii::t('lang', 'Список'),
-                'icon' => MyHelper::action_icon('index'),
-                'url' => array('index')),
-            'update' => array(
-                'label' => Yii::t('lang', 'Редактировать'),
-                'icon' => MyHelper::action_icon('update'),
-                'url' => array('update', 'id' => $id)),
-            'view' => array(
-                'label' => Yii::t('lang', 'Показать'),
-                'icon' => MyHelper::action_icon('view'),
-                'url' => array('view', 'id' => $id)),
-            'column' => array(
-                'label' => Yii::t('lang', 'Столбцы'),
-                'icon' => MyHelper::action_icon('column'),
-                'url' => array('column')),
-            'favorite' => array(
-                'label' => 'Избранное',
-                'icon' => MyHelper::action_icon('favorite'),
-                'url' => array('favorite'),
-            ),
-            'favorite_add' => array(
-                'label' => 'В Избранное',
-                'icon' => MyHelper::action_icon('favorite_add'),
-                'url' => array('favorite', 'add' => $id),
-            ),
-            'favorite_del' => array(
-                'label' => 'Уже в Избранном',
-                'icon' => MyHelper::action_icon('favorite_del'),
-                'url' => array('favorite', 'del' => $id),
-            ),
-            'delete' => array(
-                'label' => Yii::t('lang', 'Удалить'),
-                'icon' => MyHelper::action_icon('delete'),
-                'url' => '#',
-                'linkOptions' => array(
-                    'submit' => array('delete', 'id' => $id),
-                    'confirm' => Yii::t('lang', 'Вы действительно хотите удалить эту запись?')
-                )
-            ),
+    public function addWidget($title, $content){
+        $this->widgets[] = array(
+            'title' => $title,
+            'content' => $content,
         );
-        $this->menu = array();
-        switch ($this->getAction()->getId()) {
-            case 'create':
-                if (MyHelper::checkAccess($this->id, 'index')) $this->menu[] = $items['index'];
-                break;
-            case 'index':
-                if (MyHelper::checkAccess($this->id, 'create')) $this->menu[] = $items['create'];
-                if ($this->favorite_available) {
-                    if (MyHelper::checkAccess($this->id, 'favorite')) $this->menu[] = $items['favorite'];
-                }
-                break;
-            case 'column':
-                if (MyHelper::checkAccess($this->id, 'index')) $this->menu[] = $items['index'];
-                break;
-            case 'update':
-                if (MyHelper::checkAccess($this->id, 'index')) $this->menu[] = $items['index'];
-                if (MyHelper::checkAccess($this->id, 'view')) $this->menu[] = $items['view'];
-                if (MyHelper::checkAccess($this->id, 'delete')) $this->menu[] = $items['delete'];
-                break;
-            case 'view':
-                if ($this->favorite_available) {
-                    if ($this->checkFavorite($id)) $this->menu[] = $items['favorite_del'];
-                    else $this->menu[] = $items['favorite_add'];
-                }
-                if (MyHelper::checkAccess($this->id, 'index')) $this->menu[] = $items['index'];
-                if (MyHelper::checkAccess($this->id, 'update')) $this->menu[] = $items['update'];
-                if (MyHelper::checkAccess($this->id, 'delete')) $this->menu[] = $items['delete'];
-                break;
-            case 'favorite':
-                if (MyHelper::checkAccess($this->id, 'index')) $this->menu[] = $items['index'];
-                break;
-        }
-        return;
     }
-
     public function buildBreadcrumbs($id)
     {
 
@@ -350,80 +223,77 @@ class Controller extends RController
         $this->buildBreadcrumbs($item->parent_id);
     }
 
-    public function save_current_page()
-    {
-        if (Yii::app()->user->id) {
-            $rights = '';
-            $rights_flag = false;
-            if (MyHelper::checkAccess($this->id, 'view')) {
-                if ($rights_flag) $rights .= ', ';
-                $rights .= 'Чтение';
-                $rights_flag = true;
-            }
-            if (MyHelper::checkAccess($this->id, 'update')) {
-                if ($rights_flag) $rights .= ', ';
-                $rights .= 'Редактирование';
-                $rights_flag = true;
-            }
-            if (MyHelper::checkAccess($this->id, 'delete')) {
-                if ($rights_flag) $rights .= ', ';
-                $rights .= 'Удаление';
-                $rights_flag = true;
-            }
-            $this->setparam('current_page_url', Yii::app()->getRequest()->getRequestUri());
-            $this->setparam('current_page_datetime', time());
-            $this->setparam('current_page_rights', $rights);
-        }
+    public function buildTags(){
+        $this->tags = Tag::model()->getAll()->getData();
     }
 
-    public function check_current_page()
-    {
-        $text = '';
-        $n = 0;
-        $criteria = new CDbCriteria;
-        // за последние сутки
-        $criteria->addCondition('profiles.current_page_datetime > :time');
-        $criteria->params[':time'] = time() - 86400;
-        // кроме самого этого юзера
-        $criteria->addCondition('id != :id');
-        $criteria->params[':id'] = Yii::app()->user->id;
-        // с такой же текущей страницей
-        $criteria->addCondition('profiles.current_page_url = :url');
-        $criteria->params[':url'] = Yii::app()->getRequest()->getRequestUri();
+    public function buildWidgets(){
+        $cont = "
+            <ul>
+                <li>
+                    <a href='/post/mutko-schitaet-chto-samoe-glavnoe-ne-promaxnutsya-s-vyxodom-na-pik-formy-pered-igrami-v-sochi/'
+                       title='Мутко считает, что самое главное – не промахнуться с выходом на пик формы перед Играми в Сочи'>Мутко
+                        считает, что самое главное – не промахнуться с выходом на пик формы перед Играми в Сочи</a>
+                    <span class='post-date'>11.10.2013</span>
+                </li>
+            </ul>";
+        $this->addWidget('Свежие записи', $cont);
 
-        $criteria->with = array('profiles');
-        $criteria->order = 'profiles.last_name, profiles.first_name';
-        $users = Users::model()->findAll($criteria);
-        foreach ($users as $user) {
-            if ($user->profiles->current_page_datetime) $text .= MyHelper::datetime_format($user->profiles->current_page_datetime) . ' ';
-            $text .= $user->profiles->last_name . ' ' . $user->profiles->first_name . ' (' . $user->username . ') ';
-            if (!empty($user->profiles->current_page_rights)) $text .= 'с правами ' . $user->profiles->current_page_rights . "<br />\n";
-            $n++;
-        }
-        if ($n != 0) {
-            if ($n == 1) $header = "Эту страницу также просматривает";
-            else $header = "Эту страницу также просматривают";
-            $header = "<strong>" . $header . "</strong>:<br />\n";
-            Yii::app()->user->setFlash('warning', $header . $text);
-        }
+        $cont = "
+        <ul>
+            <li class='cat-item'><a href='/category/news/' title='Просмотреть все записи в рубрике &laquo;Новости&raquo;'>Новости</a> (87)</li>
+        </ul>\n";
+        $this->addWidget('Рубрики', $cont);
+
+        $cont  = "
+            <ul>
+                <li><a href='/date/2013/10/' title='Октябрь 2013'>Октябрь 2013</a>&nbsp;(36)</li>
+                <li><a href='/date/2013/09/' title='Сентябрь 2013'>Сентябрь 2013</a>&nbsp;(51)
+                </li>
+            </ul>\n";
+        $this->addWidget('Архивы', $cont);
+
+        $cont  = "<div class='tagcloud'>\n";
+                if (isset($this->tags)) {
+                    foreach ($this->tags as $tag) {
+                        $cont .= CHtml::link($tag->value, '/tag/' . $tag->url, array(
+                                    'title' => $tag->value,
+                                    'class' => 'tag-link tag-link-' . $tag->id
+                                )
+                            ) . '&nbsp;';
+                    }
+                }
+        $cont .= "</div>\n\n";
+        $this->addWidget('Метки', $cont);
+
+
+    }
+
+    public function buildMetaTags(){
+        $this->meta_title = 'Зимние Олимпийские игры 2014 в Сочи | Расписание олимпийских игр, виды спорта, трансляции, страны, рейтинги, результаты, медали';
+        $this->meta_keywords = 'мероприятия,пресс-релиз,фото,олимпийский огонь,ледовый дворец спорта,спортивные объекты,фигурное катание';
+        $this->meta_description = '';
+    }
+
+    public function buildMetaCanonical($url) {
+        $this->meta_canonical = 'http://' . Yii::app()->request->getServerName() . $url;
     }
 
     public function buildPageOptions()
     {
-        $module = $this->getModule();
-        if (!$module) $module = '';
+        if($this->getModule()) $module = $this->getModule()->getId();
+        else $module = '';
+
         $item = Item::model()->findByAttributes(array(
             'module' => $module,
             'controller' => $this->id,
-            'action' => $this->getAction()->id,
+            'action' => $this->getAction()->getId(),
         ));
 
-        $this->save_current_page();
-        if (Yii::app()->getRequest()->getRequestUri() != '/' AND Yii::app()->user->id) {
-            $this->check_current_page();
-        }
-
-        $this->buildBreadcrumbs($item->id);
+        //$this->buildBreadcrumbs($item->id);
+        $this->buildMetaTags();
+        $this->buildTags();
+        $this->buildWidgets();
 
         $this->header_image = $this->insertImage('150x150');
 
@@ -431,14 +301,10 @@ class Controller extends RController
             $this->h1 = (isset($this->_model->value) ? $this->_model->value : $item['h1']);
             $this->description = $this->_model->description;
             $this->pageTitle = (isset($this->_model->value) ? $this->_model->value : $item['h1']) . ' - ' . $item['title'];
-
-            $this->buildMenuOperations($this->_model->id);
         } else {
             $this->h1 = $item['h1'];
             $this->description = $item['description'];
             $this->pageTitle = $item['title'];
-
-            $this->buildMenuOperations();
         }
     }
 

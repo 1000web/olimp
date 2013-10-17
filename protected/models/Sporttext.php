@@ -1,23 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "{{place}}".
+ * This is the model class for table "{{sporttext}}".
  *
- * The followings are the available columns in table '{{place}}':
+ * The followings are the available columns in table '{{sporttext}}':
  * @property integer $id
- * @property integer $placegroup_id
+ * @property integer $sport_id
  * @property string $value
  * @property string $description
  *
  * The followings are the available model relations:
  * @property Users $update_user
  */
-class Place extends MyActiveRecord
+class Sporttext extends MyActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
-     * @return Place the static model class
+     * @return Sporttext the static model class
      */
     public static function model($className = __CLASS__)
     {
@@ -29,7 +29,7 @@ class Place extends MyActiveRecord
      */
     public function tableName()
     {
-        return '{{place}}';
+        return '{{sporttext}}';
     }
 
     /**
@@ -40,11 +40,11 @@ class Place extends MyActiveRecord
         return array(
             array('value', 'required'),
             array('value', 'length', 'max' => 255),
-            array('placegroup_id', 'numerical', 'integerOnly' => true),
+            array('sport_id', 'numerical', 'integerOnly' => true),
             array('description', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, placegroup_id, value, description', 'safe', 'on' => 'search'),
+            array('id, sport_id, value, description', 'safe', 'on' => 'search'),
         );
     }
 
@@ -54,19 +54,19 @@ class Place extends MyActiveRecord
     public function relations()
     {
         return array(
-            'placegroup' => array(self::BELONGS_TO, 'Placegroup', 'placegroup_id'),
-            //'organization_contacts' => array(self::HAS_MANY, 'OrganizationContact', 'place_id'),
+            'sport' => array(self::BELONGS_TO, 'Sport', 'sport_id'),
+            //'organization_contacts' => array(self::HAS_MANY, 'OrganizationContact', 'sport_id'),
         );
     }
 
     public function attributeLabels()
     {
-        return MyHelper::labels('place');
+        return MyHelper::labels('sporttext');
     }
 
     public function getAvailableAttributes()
     {
-        return array('id', 'placegroup_id', 'prior', 'visible', 'value', 'description');
+        return array('id', 'sport_id', 'prior', 'visible', 'value', 'description');
     }
 
     /**
@@ -78,7 +78,7 @@ class Place extends MyActiveRecord
         $criteria = new CDbCriteria;
 
         $criteria->compare('t.id', $this->id);
-        $criteria->compare('placegroup', $this->placegroup_id, true);
+        $criteria->compare('sport', $this->sport_id, true);
         $criteria->compare('t.value', $this->value, true);
         $criteria->compare('t.description', $this->description, true);
 
@@ -95,21 +95,22 @@ class Place extends MyActiveRecord
     public function getVisible($pagesize = 20)
     {
         $criteria = new CDbCriteria;
-        $criteria->order = 'placegroup.prior ASC, t.prior ASC';
-        $criteria->addCondition('placegroup.visible=1');
+        $criteria->order = 'sport.prior ASC, t.prior ASC';
+        $criteria->addCondition('sport.visible=1');
         $criteria->addCondition('t.visible=1');
-        $criteria->with = array('placegroup');
+        $criteria->with = array('sport');
+        $criteria->limit = $pagesize;
         return $this->getByCriteria($criteria, $pagesize);
     }
 
-    public function getByUrl($url)
+    public function getById($sport_id)
     {
         $criteria = new CDbCriteria;
-        $criteria->addCondition('t.url=:url');
-        $criteria->params = array(':url'=> $url);
+        $criteria->addCondition('t.sport_id=:sport_id');
+        $criteria->params = array(':sport_id'=> $sport_id);
         $criteria->addCondition('t.visible=1');
-        $criteria->with = array('placegroup');
-        return $this->getByCriteria($criteria, 1);
+        $criteria->order = 't.prior ASC';
+        return $this->getByCriteria($criteria, -1);
     }
 
 }

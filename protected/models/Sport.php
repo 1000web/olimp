@@ -1,23 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "{{place}}".
+ * This is the model class for table "{{sport}}".
  *
- * The followings are the available columns in table '{{place}}':
+ * The followings are the available columns in table '{{sport}}':
  * @property integer $id
- * @property integer $placegroup_id
+ * @property integer $sportgroup_id
  * @property string $value
  * @property string $description
  *
  * The followings are the available model relations:
  * @property Users $update_user
  */
-class Place extends MyActiveRecord
+class Sport extends MyActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
-     * @return Place the static model class
+     * @return Sport the static model class
      */
     public static function model($className = __CLASS__)
     {
@@ -29,7 +29,7 @@ class Place extends MyActiveRecord
      */
     public function tableName()
     {
-        return '{{place}}';
+        return '{{sport}}';
     }
 
     /**
@@ -40,11 +40,11 @@ class Place extends MyActiveRecord
         return array(
             array('value', 'required'),
             array('value', 'length', 'max' => 255),
-            array('placegroup_id', 'numerical', 'integerOnly' => true),
+            array('sportgroup_id', 'numerical', 'integerOnly' => true),
             array('description', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, placegroup_id, value, description', 'safe', 'on' => 'search'),
+            array('id, sportgroup_id, value, description', 'safe', 'on' => 'search'),
         );
     }
 
@@ -54,19 +54,19 @@ class Place extends MyActiveRecord
     public function relations()
     {
         return array(
-            'placegroup' => array(self::BELONGS_TO, 'Placegroup', 'placegroup_id'),
-            //'organization_contacts' => array(self::HAS_MANY, 'OrganizationContact', 'place_id'),
+            'sportgroup' => array(self::BELONGS_TO, 'Sportgroup', 'sportgroup_id'),
+            //'organization_contacts' => array(self::HAS_MANY, 'OrganizationContact', 'sport_id'),
         );
     }
 
     public function attributeLabels()
     {
-        return MyHelper::labels('place');
+        return MyHelper::labels('sport');
     }
 
     public function getAvailableAttributes()
     {
-        return array('id', 'placegroup_id', 'prior', 'visible', 'value', 'description');
+        return array('id', 'sportgroup_id', 'prior', 'visible', 'value', 'description');
     }
 
     /**
@@ -78,7 +78,7 @@ class Place extends MyActiveRecord
         $criteria = new CDbCriteria;
 
         $criteria->compare('t.id', $this->id);
-        $criteria->compare('placegroup', $this->placegroup_id, true);
+        $criteria->compare('sportgroup', $this->sportgroup_id, true);
         $criteria->compare('t.value', $this->value, true);
         $criteria->compare('t.description', $this->description, true);
 
@@ -95,10 +95,11 @@ class Place extends MyActiveRecord
     public function getVisible($pagesize = 20)
     {
         $criteria = new CDbCriteria;
-        $criteria->order = 'placegroup.prior ASC, t.prior ASC';
-        $criteria->addCondition('placegroup.visible=1');
+        $criteria->order = 'sportgroup.prior ASC, t.prior ASC';
+        $criteria->addCondition('sportgroup.visible=1');
         $criteria->addCondition('t.visible=1');
-        $criteria->with = array('placegroup');
+        $criteria->with = array('sportgroup');
+        $criteria->limit = $pagesize;
         return $this->getByCriteria($criteria, $pagesize);
     }
 
@@ -108,7 +109,7 @@ class Place extends MyActiveRecord
         $criteria->addCondition('t.url=:url');
         $criteria->params = array(':url'=> $url);
         $criteria->addCondition('t.visible=1');
-        $criteria->with = array('placegroup');
+        $criteria->with = array('sportgroup');
         return $this->getByCriteria($criteria, 1);
     }
 

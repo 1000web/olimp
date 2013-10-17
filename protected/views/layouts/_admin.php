@@ -27,7 +27,7 @@
 </head>
 
 <body>
-
+admin111111
 <div class="container" id="page">
     <?php
     $this->widget('bootstrap.widgets.TbNavbar', array(
@@ -48,7 +48,6 @@
 		));
     }
     ?><!-- breadcrumbs -->
-
     <div class="media">
         <div class="pull-left">
             <?php

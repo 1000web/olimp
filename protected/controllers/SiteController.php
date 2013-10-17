@@ -1,21 +1,24 @@
 <?php
 
-class SiteController extends Controller
+class SiteController extends FrontendController
 {
-    /**
-     * This is the default 'index' action that is invoked
-     * when an action is not explicitly requested by users.
-     */
     public function actionIndex()
     {
         $this->buildPageOptions();
-        if (Yii::app()->user->id) {
-            $profile = $this->getUserProfile();
-            $user = $profile->last_name . ' ' . $profile->first_name . ' (' . Yii::app()->user->username . ')';
-            $this->description = 'Вы вошли как <strong>' . $user . '</strong>.';
-        }
+
+        $posts[] =  array(
+            'id' => '24',
+            'date' => '21-10-2013',
+            'url' => 'mutko-schitaet-chto-samoe-glavnoe-ne-promaxnutsya-s-vyxodom-na-pik-formy-pered-igrami-v-sochi',
+            'title' => 'Мутко считает, что самое главное – не промахнуться с выходом на пик формы перед Играми в Сочи',
+            'categories' => array(
+                array('id' => 1, 'url' => 'news', 'value' => 'Новости'),
+                array('id' => 2, 'url' => 'medals', 'value' => 'Медали'),
+                array('id' => 3, 'url' => 'reports', 'value' => 'Репортажи'),
+            ),
+        );
         $this->render('index', array(
-            'menu' => MenuItem::model()->getItems('home_menu'),
+            'posts' => $posts,
         ));
     }
 
@@ -47,34 +50,92 @@ class SiteController extends Controller
         }
     }
 
-    public function buildMenuOperations($model = NULL)
+    public function actionPlace($url = NULL)
     {
-    }
-
-    public function actionFavorite()
-    {
-        $userProfile = $this->getUserProfile();
         $this->buildPageOptions();
 
-        $userProfile->organization_pagesize = 100;
-        $userProfile->task_pagesize = 100;
+        if($url !== NULL) {
+            $this->buildMetaCanonical('/place/' . $url);
+            $place_arr = Place::model()->getByUrl($url)->getData();
+            $place = $place_arr[0];
+            $this->render('place', array(
+                'place' => $place,
+            ));
+        } else {
+            $this->buildMetaCanonical('/place');
+            $this->render('places', array(
+                'places' => Place::model()->getVisible()->getData(),
+            ));
+        }
+    }
 
-        $this->render('favorite', array(
-            'organization' => Organization::model()->getAll($userProfile, 'favorite'),
-            'task' => Task::model()->getAll($userProfile, 'favorite'),
+    public function actionSport($url = NULL)
+    {
+        $this->buildPageOptions();
+
+        if($url !== NULL) {
+            $this->buildMetaCanonical('/sport/' . $url);
+            $sport_arr = Sport::model()->getByUrl($url)->getData();
+            $sport = $sport_arr[0];
+            $this->render('sport', array(
+                'sport' => $sport,
+                'text' => Sporttext::model()->getById($sport->id)->getData(),
+            ));
+        } else {
+            $this->buildMetaCanonical('/sport');
+            $this->render('sports', array(
+                'sports' => Sport::model()->getVisible(-1)->getData(),
+            ));
+        }
+    }
+
+    public function actionTag($url = NULL)
+    {
+        $this->buildPageOptions();
+
+        $this->render('tag', array(
+            'tags' => Tag::model()->getAll(-1)->getData(),
+            //'posts' => Post::model()->getAll(-1)->getData(),
         ));
     }
 
-    public function actionTest()
+    public function actionPost($url = NULL)
     {
-        /*
-        $value = 'date("Y-m-d H:i:s",time())';
-        echo $value . '<br>';
-        eval('echo ' . $value . ';');
-        /**/
-        echo date('Y-m-d H:i:s');
-        echo Yii::app()->getTimeZone();
-        phpinfo();
+        $this->buildPageOptions();
+
+        $this->render('post', array(
+            'tags' => Tag::model()->getAll(-1)->getData(),
+            //'posts' => Post::model()->getAll(-1)->getData(),
+        ));
+    }
+
+    public function actionCategory($url = NULL)
+    {
+        $this->buildPageOptions();
+
+        $this->render('category', array(
+            'categories' => Category::model()->getAll(-1)->getData(),
+            //'posts' => Post::model()->getAll(-1)->getData(),
+        ));
+    }
+
+    public function actionDate($y = NULL, $m = NULL, $d = NULL)
+    {
+        $this->buildPageOptions();
+        $posts[] =  array(
+            'id' => '24',
+            'date' => '21-10-2013',
+            'url' => 'mutko-schitaet-chto-samoe-glavnoe-ne-promaxnutsya-s-vyxodom-na-pik-formy-pered-igrami-v-sochi',
+            'title' => 'Мутко считает, что самое главное – не промахнуться с выходом на пик формы перед Играми в Сочи',
+            'categories' => array(
+                array('id' => 1, 'url' => 'news', 'value' => 'Новости'),
+                array('id' => 2, 'url' => 'medals', 'value' => 'Медали'),
+                array('id' => 3, 'url' => 'reports', 'value' => 'Репортажи'),
+            ),
+        );
+        $this->render('index', array(
+            'posts' => $posts,
+        ));
     }
 
 }

@@ -18,6 +18,16 @@ class MyHelper
         return $icons[$action];
     }
 
+    public static function insertImage($img, $alt = '', $htmlOptions = array()){
+        return CHtml::image(Yii::app()->params['cdnPrefix'] . $img, $alt, $htmlOptions);
+    }
+
+    public static function print_r($t) {
+        echo '<pre>';
+        print_r($t);
+        echo '</pre>';
+    }
+
     public static function checkAccess($param1, $param2, $param3 = NULL)
     {
         $param = '';
