@@ -109,5 +109,19 @@ class MyActiveRecord extends CActiveRecord
         return $this->evaluateExpression($value);
     }
 
+    public function getAll($pagesize = 20)
+    {
+        $criteria = new CDbCriteria;
+        return $this->getByCriteria($criteria, $pagesize);
+    }
+
+    public function getByUrl($url)
+    {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('t.url=:url');
+        $criteria->params = array(':url'=> $url);
+        $criteria->addCondition('t.visible=1');
+        return $this->getByCriteria($criteria, 1);
+    }
 
 }

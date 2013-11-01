@@ -7,35 +7,28 @@
     <title><?php echo $this->meta_title; ?></title>
 
     <?php
-    if (!empty($this->meta_keywords)) echo "<meta name='keywords' content='" . $this->meta_keywords . "' />\n";
-    if (!empty($this->meta_description)) echo "<meta name='description' content='" . $this->meta_description . "' />\n";
+    if ($this->meta_description !== null) echo CHtml::metaTag($this->meta_description, 'description').PHP_EOL;
+    else if($this->default_description !== null) echo CHtml::metaTag($this->default_description, 'description').PHP_EOL;
 
-    if (!empty($this->meta_prev)) echo "<link rel='prev' href='" . $this->meta_prev . "' />\n";
-    if (!empty($this->meta_next)) echo "<link rel='next' href='" . $this->meta_next . "' />\n";
-    if (!empty($this->meta_canonical)) echo "<link rel='canonical' href='" . $this->meta_canonical . "' />\n";
+    if ($this->meta_keywords !== null) echo CHtml::metaTag($this->meta_keywords, 'keywords').PHP_EOL;
+    else if ($this->default_keywords !== null) echo CHtml::metaTag($this->default_keywords, 'keywords').PHP_EOL;
+
+    if ($this->meta_prev !== null) echo "<link rel='prev' href='" . $this->meta_prev . "' />\n";
+    if ($this->meta_next !== null) echo "<link rel='next' href='" . $this->meta_next . "' />\n";
+
+    $request = Yii::app()->getRequest();
+    $url = $request->getUrl();
+    //$this->meta_canonical = $this->getAbsoluteUrl();
+    // Make sure that we do not create a recursive canonical redirect.
+    if ($this->meta_canonical !== $url && $this->meta_canonical !== $request->getHostInfo().$url)
+        echo '<link rel="canonical" href="'.$this->meta_canonical.'" />'.PHP_EOL;
+
     ?>
 
     <link rel="stylesheet" href="<?php echo Yii::app()->theme->baseUrl; ?>/style.css" type="text/css" media="screen"/>
-    <link rel="alternate" type="application/rss+xml" title="Зимние Олимпийские игры 2014 в Сочи RSS Feed post" href="http://www.olimp2014.net/feed/post"/>
-    <!--link rel="pingback" href="/xmlrpc.php"/-->
+    <!--link rel="alternate" type="application/rss+xml" title="Зимние Олимпийские игры 2014 в Сочи RSS Feed post" href="http://www.olimp2014.net/feed/post"/-->
 
-    <!--<style type="text/css" media="screen">
-    </style>-->
-
-    <style type="text/css">
-        .wp-pagenavi {
-            float: left !important;
-        }
-    </style>
-    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.olimp2014.net/xmlrpc.php?rsd"/>
-    <link rel="wlwmanifest" type="application/wlwmanifest+xml"
-          href="http://www.olimp2014.net/wp-includes/wlwmanifest.xml"/>
-    <meta name="generator" content="WordPress 3.6.1"/>
-    <style type="text/css">
-        .wp-pagenavi {
-            font-size: 12px !important;
-        }
-    </style>
+    <meta name="generator" content="CMS.1000web"/>
     <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
 
 </head>
@@ -43,7 +36,7 @@
 <div id="page">
     <div id="header">
         <div id="headerimg">
-            <h1><a href="/" title="Зимние Олимпийские игры 2014 в Сочи">Зимние Олимпийские игры 2014 в Сочи</a></h1>
+            <h1><a href="/" title="На главную - <?php echo Yii::app()->name; ?>"><?php echo Yii::app()->name; ?></a></h1>
 
             <div class="description">
                 Расписание олимпийских игр<br/>
@@ -52,6 +45,22 @@
             </div>
         </div>
     </div>
+
+    <?php
+    if(Yii::app()->user->isAdmin()) {
+        $this->widget('bootstrap.widgets.TbNavbar', array(
+            //'htmlOptions' => array('class'=>'nav-collapse collapse'),
+            'items' => array(
+                array(
+                    'class' => 'bootstrap.widgets.TbMenu',
+                    'encodeLabel' => false,
+                    'items' => MenuItem::model()->getItemsArray('top_menu'),
+                ),
+            ),
+        ));
+    }
+    ?>
+
     <div id="menu">
         <ul>
             <li class="page_item"><a href="/sport">Виды спорта</a></li>
@@ -73,12 +82,14 @@
         }
         echo $content;
         ?>
-
-        <!--div class="navigation">
-            <div class="alignleft"><a href="http://www.olimp2014.net/page/2/">&laquo; Старые записи</a></div>
+<?php
+/**
+    <div class="navigation">
+        <div class="alignleft"><a href="http://www.olimp2014.net/page/2/">&laquo; Старые записи</a></div>
         <div class="alignright"></div>
-    </div-->
-
+    </div>
+/**/
+?>
 
     </div>
 
@@ -101,7 +112,7 @@
 <hr/>
 <div id="footer">
     <p>
-        Зимние Олимпийские игры 2014 в Сочи
+        <?php echo Yii::app()->name; ?>
         <a href="/feed/post">Записи (RSS)</a>
         <a href="/feed/comment">Комментарии (RSS)</a>.
     </p>

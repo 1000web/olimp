@@ -88,9 +88,6 @@ class MenuItem extends MyActiveRecord
      */
     public function search()
     {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
@@ -128,7 +125,8 @@ class MenuItem extends MyActiveRecord
         foreach ($menu_items as $item) {
             if (MyHelper::checkAccess($item['i']['module'], $item['i']['controller'], $item['i']['action'])) {
                 if (!Yii::app()->user->isGuest AND $item['guest_only']) continue;
-                if (empty($item['i']['url'])) $item['i']['url'] = MyHelper::createURL($item['i']['module'], $item['i']['controller'], $item['i']['action']);
+                if (empty($item['i']['url']))
+                    $item['i']['url'] = MyHelper::createURL($item['i']['module'], $item['i']['controller'], $item['i']['action']);
                 $newItem = array(
                     'url' => $item['i']['url'],
                     'icon' => $item['i']['icon'],

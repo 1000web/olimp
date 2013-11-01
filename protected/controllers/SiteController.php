@@ -22,15 +22,8 @@ class SiteController extends FrontendController
         ));
     }
 
-    public function actionAbout()
-    {
-        $this->buildPageOptions();
-        $this->render('about');
-    }
-
     public function actionLogin()
     {
-        //$this->render('login');
         if (Yii::app()->user->isGuest) $this->redirect('/user/login');
         else $this->redirect('/');
     }
@@ -84,7 +77,7 @@ class SiteController extends FrontendController
         } else {
             $this->buildMetaCanonical('/sport');
             $this->render('sports', array(
-                'sports' => Sport::model()->getVisible(-1)->getData(),
+                'sports' => Sport::model()->getVisible(100)->getData(),
             ));
         }
     }
@@ -92,11 +85,25 @@ class SiteController extends FrontendController
     public function actionTag($url = NULL)
     {
         $this->buildPageOptions();
-
+/*
         $this->render('tag', array(
             'tags' => Tag::model()->getAll(-1)->getData(),
             //'posts' => Post::model()->getAll(-1)->getData(),
         ));
+/**/
+        if($url !== NULL) {
+            $this->buildMetaCanonical('/tag/' . $url);
+            $arr = Tag::model()->getByUrl($url)->getData();
+            $tag = $arr[0];
+            $this->render('tag', array(
+                'tag' => $tag,
+            ));
+        } else {
+            $this->buildMetaCanonical('/tag');
+            $this->render('tags', array(
+                'tags' => Tag::model()->getAll()->getData(),
+            ));
+        }
     }
 
     public function actionPost($url = NULL)
@@ -113,10 +120,20 @@ class SiteController extends FrontendController
     {
         $this->buildPageOptions();
 
-        $this->render('category', array(
-            'categories' => Category::model()->getAll(-1)->getData(),
-            //'posts' => Post::model()->getAll(-1)->getData(),
-        ));
+        if($url !== NULL) {
+            $this->buildMetaCanonical('/category/' . $url);
+            $arr = Category::model()->getByUrl($url)->getData();
+            $category = $arr[0];
+            $this->render('category', array(
+                'category' => $category,
+                //'text' => Sporttext::model()->getById($sport->id)->getData(),
+            ));
+        } else {
+            $this->buildMetaCanonical('/category');
+            $this->render('categories', array(
+                'categories' => Category::model()->getAll()->getData(),
+            ));
+        }
     }
 
     public function actionDate($y = NULL, $m = NULL, $d = NULL)

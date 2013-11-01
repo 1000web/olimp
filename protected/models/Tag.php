@@ -86,10 +86,4 @@ class Tag extends MyActiveRecord
         return $this->getByCriteria($criteria);
     }
 
-    public function getAll($pagesize = 20)
-    {
-        $criteria = new CDbCriteria;
-        return $this->getByCriteria($criteria, $pagesize);
-    }
-
 }

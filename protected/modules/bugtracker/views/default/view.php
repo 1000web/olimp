@@ -17,7 +17,7 @@ if(empty($this->_model->comments)) {
         //echo $item->user->profiles->last_name . ' ' . $item->user->profiles->first_name . ' (' . $item->user->username . ")\n";
         echo $item->user->profiles->last_name . ' ' . $item->user->profiles->first_name . "\n";
         echo "</strong>\n";
-        echo MyHelper::datetime_format($item->create_time) . "<br />\n";
+        echo MyHelper::datetime_format($item->datetime) . "<br />\n";
         echo $item->comment;
         echo "</td></tr>\n";
     }

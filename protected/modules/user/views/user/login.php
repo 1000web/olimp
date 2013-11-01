@@ -1,10 +1,11 @@
 <?php
-$this->pageTitle = Yii::app()->name . ' - ' . UserModule::t("Login");
+$this->pageTitle = UserModule::t("Login") . ' - ' . Yii::app()->name;
 $this->breadcrumbs = array(
     UserModule::t("Login"),
 );
 
-$this->h1 = UserModule::t("Login"); ?>
+//$this->h1 = UserModule::t("Login");
+?>
 
 <?php if (Yii::app()->user->hasFlash('loginMessage')): ?>
 
@@ -18,8 +19,8 @@ $this->h1 = UserModule::t("Login"); ?>
 
         <?php /** @var BootActiveForm $form */
         $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-            'id'=>'verticalForm',
-            'htmlOptions'=>array('class'=>'well'),
+            'id' => 'verticalForm',
+            'htmlOptions' => array('class' => 'well'),
         )); ?>
 
         <div class="row">
@@ -29,20 +30,23 @@ $this->h1 = UserModule::t("Login"); ?>
             <legend><?php echo UserModule::t("Please fill out the following form with your login credentials:"); ?></legend>
         </div>
 
-<?php /*
+        <?php /*
         <p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
-*/?>
+*/
+        ?>
 
         <div class="row">
-            <?php echo $form->textFieldRow($model, 'username', array('class'=>'span3')); ?>
+            <?php echo $form->textFieldRow($model, 'username', array('class' => 'span3')); ?>
             <?php /*echo CHtml::activeLabelEx($model, 'username'); ?>
-            <?php echo CHtml::activeTextField($model, 'username') */?>
+            <?php echo CHtml::activeTextField($model, 'username') */
+            ?>
         </div>
 
         <div class="row">
-            <?php echo $form->passwordFieldRow($model, 'password', array('class'=>'span3')); ?>
+            <?php echo $form->passwordFieldRow($model, 'password', array('class' => 'span3')); ?>
             <?php /*echo CHtml::activeLabelEx($model, 'password'); ?>
-            <?php echo CHtml::activePasswordField($model, 'password') */?>
+            <?php echo CHtml::activePasswordField($model, 'password') */
+            ?>
         </div>
 
         <div class="row">
@@ -55,11 +59,12 @@ $this->h1 = UserModule::t("Login"); ?>
         <div class="row">
             <?php echo $form->checkboxRow($model, 'rememberMe'); ?>
             <?php /*echo CHtml::activeCheckBox($model, 'rememberMe'); ?>
-            <?php echo CHtml::activeLabelEx($model, 'rememberMe'); */?>
+            <?php echo CHtml::activeLabelEx($model, 'rememberMe'); */
+            ?>
         </div>
 
         <div class="row submit">
-            <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'label' => UserModule::t("Login"))); ?>
+            <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'label' => UserModule::t("Login"))); ?>
         </div>
 
         <?php $this->endWidget(); ?>

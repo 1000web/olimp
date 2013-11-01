@@ -1,14 +1,12 @@
 <?php
 /* @var $this SiteController */
-/* @var $tags array */
+/* @var $tag array */
 
+$this->breadcrumbs = array(
+    'Теги записей' => array('/tag'),
+    $tag->value
+);
+$this->buildMetaTitle();
 
-foreach ($tags as $tag) {
-    echo CHtml::link($tag->value, '/tag/' . $tag->url, array(
-                'title' => $tag->value,
-                'class' => 'tag-link tag-link-' . $tag->id
-            )
-        ) . '&nbsp;';
-}
-
+echo "<h2>" . $tag->value . "</h2>";
 

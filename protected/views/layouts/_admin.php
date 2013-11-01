@@ -31,6 +31,8 @@ admin111111
 <div class="container" id="page">
     <?php
     $this->widget('bootstrap.widgets.TbNavbar', array(
+        'brand' => 'Admin',
+        'brandUrl' => '/admin/',
         //'htmlOptions' => array('class'=>'nav-collapse collapse'),
         'items' => array(
             array(
@@ -82,7 +84,7 @@ admin111111
     <div class="clear"></div>
 
     <div id="footer">
-        &copy; <?php echo date('Y'); ?> <a href="http://1000web.ru" target="_blank">1000web.ru</a> | <a href="/site/about">О программе</a>
+        &copy; <?php echo date('Y'); ?> <a href="http://1000web.ru" target="_blank">1000web.ru</a>
     </div>
     <!-- footer -->
 

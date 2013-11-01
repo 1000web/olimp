@@ -76,7 +76,6 @@ class Category extends MyActiveRecord
     public function search()
     {
         $criteria = new CDbCriteria;
-
         $criteria->compare('id', $this->id);
         $criteria->compare('visible', $this->visible);
         $criteria->compare('url', $this->url, true);
@@ -84,12 +83,6 @@ class Category extends MyActiveRecord
         $criteria->compare('description', $this->description, true);
 
         return $this->getByCriteria($criteria);
-    }
-
-    public function getAll($pagesize = 20)
-    {
-        $criteria = new CDbCriteria;
-        return $this->getByCriteria($criteria, $pagesize);
     }
 
 }

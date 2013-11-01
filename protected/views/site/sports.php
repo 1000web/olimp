@@ -1,15 +1,17 @@
 <?php
-/* @var $this SportController */
+/* @var $this SiteController */
 /* @var $sports array */
 
-?>
-<h2>Виды спорта на зимних Олимпийских Играх 2014 в Сочи</h2>
-<?php
 
 $this->breadcrumbs = array(
     'Виды спорта'
 );
+$this->buildMetaTitle();
 
+
+?>
+    <h2>Виды спорта на зимних Олимпийских Играх 2014 в Сочи</h2>
+<?php
 foreach ($sports as $sport) {
     ?>
     <div class="media">

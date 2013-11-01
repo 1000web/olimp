@@ -85,11 +85,11 @@ class Sportgroup extends MyActiveRecord
 
         return $this->getByCriteria($criteria);
     }
-
+/*
     public function getAll($userProfile)
     {
         $criteria = new CDbCriteria;
         return $this->getByCriteria($criteria, $userProfile->sportgroup_pagesize);
-    }
+    }/**/
 
 }

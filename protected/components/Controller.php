@@ -167,21 +167,27 @@ class Controller extends RController
 
     public function addButton($controller, $action)
     {
-        if (!$controller) $controller = $this->id;
         if ($action == 'copy') $check = 'create';
         else $check = $action;
-        if (MyHelper::checkAccess($controller, $check)) {
+        if (!$controller) $controller = $this->id;
+
+        $url = $controller . '/' . $check;
+        if($module = $this->getModule() !== NULL) {
+            $module = $this->getModule()->getId();
+            $url = $module . '/' . $url;
+        }
+        if (MyHelper::checkAccess($module, $controller, $check)) {
             $this->buttons[$action] = array(
-                'url' => 'Yii::app()->createUrl("' . $controller . '/' . $action . '", array("id"=>$data->id))',
+                'url' => 'Yii::app()->createUrl("' . $url . '", array("id"=>$data->id))',
             );
             switch ($action) {
                 case 'create':
-                    $this->buttons[$action]['url'] = 'Yii::app()->createUrl("' . $controller . '/' . $action . '", array("parent_id"=>$data->id))';
                     $this->buttons[$action]['icon'] = 'icon-plus';
+                    $this->buttons[$action]['url'] = 'Yii::app()->createUrl("' . $url . '", array("parent_id"=>$data->id))';
                     break;
                 case 'copy':
-                    $this->buttons[$action]['url'] = 'Yii::app()->createUrl("' . $controller . '/create", array("copy"=>$data->id))';
                     $this->buttons[$action]['icon'] = 'icon-plus';
+                    $this->buttons[$action]['url'] = 'Yii::app()->createUrl("' . $url . '", array("copy"=>$data->id))';
                     break;
             }
         }
@@ -328,8 +334,9 @@ class Controller extends RController
             return;
         }
         // Home page site/index
-        if (!$item->parent_id) return;
+        //if (!$item->parent_id) return;
         //if($item->parent_id == 1) return;
+
         if (!$this->breadcrumbs) {
             // это первая крошка
             $this->breadcrumbs = array($item->value);
@@ -346,7 +353,7 @@ class Controller extends RController
                 $this->breadcrumbs
             );
         }
-        $this->buildBreadcrumbs($item->parent_id);
+        if ($item->parent_id) $this->buildBreadcrumbs($item->parent_id);
     }
 
     public function save_current_page()

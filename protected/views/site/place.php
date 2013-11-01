@@ -1,11 +1,13 @@
 <?php
-/* @var $this PlaceController */
+/* @var $this SiteController */
 /* @var $place array */
 
 $this->breadcrumbs = array(
     'Место проведения' => array('/place'),
     $place->value
 );
+$this->buildMetaTitle();
+
 ?>
 <div class="media">
     <div class="pull-left">

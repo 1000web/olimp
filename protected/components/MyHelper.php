@@ -61,6 +61,7 @@ class MyHelper
             // $param1 = controller, param2 = action
             $url = '/' . $param1 . '/' . $param2;
         }
+        //return $url;
         return array($url);
     }
 
@@ -228,6 +229,9 @@ class MyHelper
                 //$value = '($data->user_id == Yii::app()->user->id)?"Я":$data->user->username';
                 //$value = '$data->user->profiles->last_name $data->user->profiles->first_name ($data->user->username)';
                 break;
+            case 'owner_id':
+                $value = '$data->owner?$data->owner->username:""';
+                break;
             case 'num':
                 $value = 'MyHelper::number_format($data->num)';
                 break;
@@ -242,6 +246,9 @@ class MyHelper
                 break;
             case 'datetime':
                 $value = 'MyHelper::datetime_format($data->datetime)';
+                break;
+            case 'create_datetime':
+                $value = 'MyHelper::datetime_format($data->create_datetime)';
                 break;
             case 'task_type_id':
                 $value = '$data->task_type->value';

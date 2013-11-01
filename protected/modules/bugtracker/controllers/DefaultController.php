@@ -1,6 +1,6 @@
 <?php
 
-class TaskController extends Controller
+class DefaultController extends Controller
 {
     public function actionView($id)
     {

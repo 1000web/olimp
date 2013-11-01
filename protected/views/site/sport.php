@@ -1,11 +1,12 @@
 <?php
-/* @var $this SportController */
+/* @var $this SiteController */
 /* @var $sport array */
 
 $this->breadcrumbs = array(
     'Виды спорта' => array('/sport'),
     $sport->value
 );
+$this->buildMetaTitle();
 
 
 echo "<a id='top'> </a><h2>" . $sport->value . "</h2>\n";

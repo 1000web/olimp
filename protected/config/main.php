@@ -11,7 +11,6 @@ Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
 // CWebApplication properties can be configured here.
 
 switch ($_SERVER['SERVER_NAME']) {
-    // если имя сервера начинается на local.
     case "olimp2014.net":
     case "www.olimp2014.net":
         $config = 'db/olimp2014.php';
@@ -32,7 +31,7 @@ return CMap::mergeArray(
         'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
         'defaultController' => 'site',
 
-        'name' => 'Olimp',
+        'name' => 'Зимние Олимпийские игры 2013 в Сочи',
         'theme' => 'olimp2014',
 
         // preloading 'log' component
@@ -53,6 +52,7 @@ return CMap::mergeArray(
         ),
         'modules' => array(
             'admin',
+            'bugtracker',
             'rights',
             'user' => array(
                 # encrypting method (php hash function)
@@ -127,8 +127,13 @@ return CMap::mergeArray(
                     'date/<y:\d+>/<m:\d+>/<d:\d+>' => 'site/date',
 
                     '<controller:\w+>/<id:\d+>' => '<controller>/view',
-                    '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                     '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                    '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                    /*
+                    '<module:\w+><controller:\w+>/<id:\d+>' => '<module><controller>/view',
+                    '<module:\w+><controller:\w+>/<action:\w+>' => '<module><controller>/<action>',
+                    '<module:\w+><controller:\w+>/<action:\w+>/<id:\d+>' => '<module><controller>/<action>',
+                    /**/
                 ),
             ),
             'sms' => array(
@@ -163,8 +168,7 @@ return CMap::mergeArray(
         // application-level parameters that can be accessed
         // using Yii::app()->params['paramName']
         'params' => array(
-            // this is used in contact page
-            'adminEmail' => 'admin@1000web.ru',
+            'adminEmail' => 'admin@olimp2014.net',
             'cdnPrefix' => '',
             //'cdnPrefix' => 'http://cdn.olimp2014.net',
         ),

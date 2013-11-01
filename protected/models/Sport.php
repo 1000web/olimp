@@ -76,7 +76,6 @@ class Sport extends MyActiveRecord
     public function search()
     {
         $criteria = new CDbCriteria;
-
         $criteria->compare('t.id', $this->id);
         $criteria->compare('sportgroup', $this->sportgroup_id, true);
         $criteria->compare('t.value', $this->value, true);
@@ -101,16 +100,6 @@ class Sport extends MyActiveRecord
         $criteria->with = array('sportgroup');
         $criteria->limit = $pagesize;
         return $this->getByCriteria($criteria, $pagesize);
-    }
-
-    public function getByUrl($url)
-    {
-        $criteria = new CDbCriteria;
-        $criteria->addCondition('t.url=:url');
-        $criteria->params = array(':url'=> $url);
-        $criteria->addCondition('t.visible=1');
-        $criteria->with = array('sportgroup');
-        return $this->getByCriteria($criteria, 1);
     }
 
 }

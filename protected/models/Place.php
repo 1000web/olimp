@@ -84,14 +84,14 @@ class Place extends MyActiveRecord
 
         return $this->getByCriteria($criteria);
     }
-
-    public function getAll($pagesize = 20)
+/*
+    public function getAll($userProfile)
     {
         $criteria = new CDbCriteria;
         $criteria->order = 't.prior ASC';
-        return $this->getByCriteria($criteria, $pagesize);
+        return $this->getByCriteria($criteria, $userProfile->place_pagesize);
     }
-
+/**/
     public function getVisible($pagesize = 20)
     {
         $criteria = new CDbCriteria;
@@ -100,16 +100,6 @@ class Place extends MyActiveRecord
         $criteria->addCondition('t.visible=1');
         $criteria->with = array('placegroup');
         return $this->getByCriteria($criteria, $pagesize);
-    }
-
-    public function getByUrl($url)
-    {
-        $criteria = new CDbCriteria;
-        $criteria->addCondition('t.url=:url');
-        $criteria->params = array(':url'=> $url);
-        $criteria->addCondition('t.visible=1');
-        $criteria->with = array('placegroup');
-        return $this->getByCriteria($criteria, 1);
     }
 
 }

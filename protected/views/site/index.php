@@ -2,6 +2,8 @@
 /* @var $this SiteController */
 /* @var $posts array */
 
+$this->buildMetaTitle('Главная страница');
+
 foreach($posts as $post) {
 
 ?>

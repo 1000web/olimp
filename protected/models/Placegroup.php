@@ -85,11 +85,11 @@ class Placegroup extends MyActiveRecord
 
         return $this->getByCriteria($criteria);
     }
-
+/*
     public function getAll($userProfile)
     {
         $criteria = new CDbCriteria;
         return $this->getByCriteria($criteria, $userProfile->placegroup_pagesize);
     }
-
+/**/
 }

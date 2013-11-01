@@ -1,14 +1,12 @@
 <?php
 /* @var $this SiteController */
-/* @var $categories array */
+/* @var $category array */
 
+$this->breadcrumbs = array(
+    'Категории записей' => array('/category'),
+    $category->value
+);
+$this->buildMetaTitle();
 
-foreach ($categories as $item) {
-    echo CHtml::link($item->value, '/category/' .$item->id . '/' . $item->url, array(
-                'title' => $item->value,
-                'class' => 'cat-link cat-link-' . $item->id
-            )
-        ) . '&nbsp;';
-}
-
+echo "<h3>" . $category->value . "</h3>";
 

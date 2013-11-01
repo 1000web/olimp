@@ -2,7 +2,7 @@
 /* @var $this TaskController */
 /* @var $dataProvider CActiveDataProvider */
 
-$controller = 'task';
+$controller = 'default';
 $this->columnLabels($controller);
 if($this->getAction()->getId() != 'search' AND !isset($no_filter_buttons)) $this->renderPartial('../' . $controller . '/_filter_buttons');
 $this->addButtons($controller, array('view', 'update', 'copy', 'delete'));

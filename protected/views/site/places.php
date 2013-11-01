@@ -1,10 +1,11 @@
 <?php
-/* @var $this PlaceController */
+/* @var $this SiteController */
 /* @var $places array */
 
 $this->breadcrumbs = array(
     'Место проведения'
 );
+$this->buildMetaTitle();
 
 ?>
 <h2>Место проведения зимних Олимпийских Игр 2014 в Сочи</h2>
